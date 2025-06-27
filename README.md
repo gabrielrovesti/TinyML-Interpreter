@@ -1,267 +1,235 @@
-# TinyML Interpreter - Complete Project Setup
+# TinyML Interpreter
 
-This is a fully functional ML interpreter that demonstrates advanced concepts in programming language theory and implementation, including type inference, operational semantics, and functional programming paradigms.
+A complete ML interpreter implementation in F# following the Hindley-Milner type system and operational semantics as taught in the Functional Languages course at University of Padova. Made for fun and educational purposes, this project showcases the principles of type inference, polymorphism, and functional programming concepts.
 
-## 📁 Complete Project Structure
+## Overview
+
+TinyML is a functional programming language interpreter that implements:
+- **Hindley-Milner type system** with parametric polymorphism
+- **Type inference** using unification and substitution
+- **Operational semantics** with lexical scoping
+- **Let-polymorphism** with type schemes and generalization
+
+## Features
+
+### Language Constructs
+- **Literals**: integers, floats, booleans, strings, chars, unit
+- **Variables**: identifier bindings with type inference
+- **Lambda abstractions**: `λx.e` with closures
+- **Function application**: with β-reduction
+- **Let bindings**: `let x = e1 in e2` with polymorphic generalization
+- **Recursive functions**: `let rec f = λx.e1 in e2` with rec-closures
+- **Conditionals**: `if e1 then e2 else e3`
+- **Tuples**: `(e1, e2, ..., en)` as product types
+- **Binary operations**: arithmetic and comparison operators
+
+### Type System
+- **Type inference**: Complete Hindley-Milner algorithm
+- **Parametric polymorphism**: Generic functions with type variables
+- **Unification**: Most general unifier (MGU) computation
+- **Type schemes**: Universal quantification for let-polymorphism
+- **Substitutions**: Type variable replacement with occurs check
+
+### Interpreter Components
+- **Lexer**: Tokenization of source code
+- **Parser**: AST generation with precedence handling
+- **Type Checker**: Type inference with constraint solving
+- **Evaluator**: Operational semantics with environments
+
+## Project Structure
 
 ```
-TinyML-Interpreter/
-├── README.md                    # Comprehensive project documentation
-├── LICENSE                      # MIT License
-├── .gitignore                   # Git ignore file for F#/.NET
-├── TinyML.fsproj               # F# project file with dependencies
-│
-├── src/                        # Core interpreter implementation
-│   ├── Ast.fs                  # Abstract Syntax Tree definitions
-│   ├── Types.fs                # Type system and Hindley-Milner operations
-│   ├── Environment.fs          # Environment management (Γ and Δ)
-│   ├── Lexer.fs                # Lexical analysis and tokenization
-│   ├── Parser.fs               # Syntax analysis and AST generation
-│   ├── TypeChecker.fs          # Type inference engine
-│   ├── Evaluator.fs            # Operational semantics implementation
-│   └── Main.fs                 # REPL and command-line interface
-│
-├── tests/                      # Comprehensive test suite
-│   ├── TypeTests.fs            # Type system and inference tests
-│   ├── EvalTests.fs            # Evaluation and runtime tests
-│   └── ParserTests.fs          # Lexer and parser tests
-│
-└── examples/                   # Example TinyML programs
-    ├── basic.ml                # Basic language constructs
-    ├── recursion.ml            # Recursive functions and algorithms
-    └── polymorphism.ml         # Advanced polymorphic examples
+TinyML/
+├── src/
+│   ├── Ast.fs           # Abstract Syntax Tree definitions
+│   ├── Types.fs         # Type system and type schemes
+│   ├── Lexer.fs         # Lexical analysis
+│   ├── Parser.fs        # Syntax analysis
+│   ├── TypeChecker.fs   # Type inference engine
+│   ├── Evaluator.fs     # Operational semantics
+│   ├── Environment.fs   # Environment utilities
+│   ├── Unification.fs   # Unification algorithm
+│   ├── Substitution.fs  # Type substitutions
+│   └── Main.fs          # REPL and entry point
+├── tests/
+│   ├── TypeTests.fs     # Type inference tests
+│   ├── EvalTests.fs     # Evaluation tests
+│   └── ParserTests.fs   # Parser tests
+├── examples/
+│   ├── basic.ml         # Basic examples
+│   ├── polymorphism.ml  # Polymorphic functions
+│   └── recursion.ml     # Recursive functions
+├── TinyML.fsproj        # F# project file
+├── README.md            # This file
+└── LICENSE              # MIT License
 ```
 
-## 🚀 Quick Start Guide
+## Installation & Usage
 
 ### Prerequisites
 - .NET 6.0 or later
-- F# compiler (included with .NET)
-- Git for version control
+- F# compiler
 
-### 1. Clone and Setup
+### Build & Run
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/TinyML-Interpreter.git
 cd TinyML-Interpreter
 
-# Restore dependencies and build
-dotnet restore
+# Build the project
 dotnet build
 
-# Run tests to verify everything works
+# Run the REPL
+dotnet run
+
+# Run tests
 dotnet test
 ```
 
-### 2. Start the REPL
-```bash
-dotnet run
+### REPL Commands
 ```
-
-### 3. Try Some Examples
-```fsharp
 TinyML> let id = λx.x;;
 val id : 'a -> 'a
 
-TinyML> id 42;;
-- : int = 42
+TinyML> let compose = λf.λg.λx.f (g x);;
+val compose : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b
 
 TinyML> let rec factorial = λn.if n = 0 then 1 else n * factorial (n - 1);;
 val factorial : int -> int
 
 TinyML> factorial 5;;
 - : int = 120
-
-TinyML> :load examples/basic.ml;;
-Loading examples/basic.ml...
 ```
 
-## 🏗️ Architecture Overview
+## Language Grammar
 
-### Core Components
+```
+e ::= expressions
+    | L                    literal
+    | x                    variable
+    | λx.e                 lambda abstraction
+    | e e                  application
+    | let x = e in e       let binding
+    | let rec f = λx.e in e recursive binding
+    | if e then e else e   conditional
+    | (e, .., e)          tuple
+    | e + e               binary operator
 
-1. **AST (Ast.fs)**: Defines the abstract syntax tree with full ML constructs
-2. **Type System (Types.fs)**: Implements Hindley-Milner type inference with:
-   - Type unification and substitution
-   - Parametric polymorphism
-   - Let-polymorphism with generalization/instantiation
-3. **Lexer (Lexer.fs)**: Tokenizes source code with proper error handling
-4. **Parser (Parser.fs)**: Recursive descent parser with operator precedence
-5. **Type Checker (TypeChecker.fs)**: Syntax-directed type inference following formal rules
-6. **Evaluator (Evaluator.fs)**: Call-by-value operational semantics with closures
-7. **Environment (Environment.fs)**: Manages typing (Γ) and evaluation (Δ) environments
+L ::= literals
+    | n                   integers
+    | m                   floats
+    | true | false        booleans
+    | "string"            strings
+    | 'char'              characters
+    | ()                  unit
+```
 
-### Language Features
+## Type System
 
-- **Core Lambda Calculus**: λ-abstractions, applications, variables
-- **Let Bindings**: `let x = e1 in e2` with polymorphic generalization
-- **Recursion**: `let rec f = λx.e1 in e2` with proper recursive closures
-- **Data Types**: integers, floats, booleans, strings, characters, unit, tuples
-- **Control Flow**: `if-then-else` conditionals
-- **Operators**: arithmetic, comparison, logical operations
-- **Type Inference**: Complete Hindley-Milner with parametric polymorphism
+### Types
+```
+τ ::= types
+    | c                   type constructor (int, bool, etc.)
+    | τ → τ              function type
+    | α, β, γ            type variables
+    | τ * .. * τ         tuple type
 
-## 📚 Educational Value
+σ ::= ∀α.τ              type schemes
+```
 
-This project demonstrates:
+### Type Inference Rules
+The implementation follows the formal type inference rules with:
+- **Generalization**: `gen_Γ(τ) = ∀α.τ where α = ftv(τ) \ ftv(Γ)`
+- **Instantiation**: `inst(∀α.τ) = re_α(τ)` with fresh type variables
+- **Unification**: `U(τ1, τ2) = θ such that θ(τ1) ≡ θ(τ2)`
 
-### Theoretical Concepts
-- **Type Theory**: Hindley-Milner type system implementation
-- **Operational Semantics**: Formal evaluation rules (E-rules)
-- **Type Inference**: Constraint generation and unification
-- **Lambda Calculus**: Pure functional computation model
-- **Polymorphism**: Parametric types and instantiation
+## Examples
 
-### Practical Skills
-- **Compiler Construction**: Lexing, parsing, type checking, evaluation
-- **F# Programming**: Advanced functional programming techniques
-- **Algorithm Implementation**: Unification, substitution, environment management
-- **Software Engineering**: Modular design, testing, documentation
+### Polymorphic Identity Function
+```ocaml
+let id = λx.x in
+let f = id 42 in
+let g = id true in
+(f, g)
+```
 
-## 🧪 Testing Strategy
+### Higher-Order Functions
+```ocaml
+let map = λf.λlist.
+  let rec go = λl.
+    if null l then []
+    else f (head l) :: go (tail l)
+  in go list
+in
+map (λx.x + 1) [1; 2; 3]
+```
+
+### Mutual Recursion
+```ocaml
+let rec even = λn.
+  if n = 0 then true
+  else odd (n - 1)
+and odd = λn.
+  if n = 0 then false
+  else even (n - 1)
+in
+even 42
+```
+
+## Implementation Details
+
+### Type Inference Algorithm
+1. **Constraint Generation**: Traverse AST generating type equations
+2. **Unification**: Solve constraints using most general unifier
+3. **Substitution**: Apply solutions to infer principal types
+4. **Generalization**: Abstract type variables in let-bindings
+
+### Operational Semantics
+- **Closures**: `⟨λx.e, Δ⟩` capture lexical environment
+- **Rec-Closures**: `⟨λx.e, f, Δ⟩` enable recursive calls
+- **β-Reduction**: Function application via environment extension
+- **Lazy Evaluation**: Values computed on-demand
+
+## Testing
 
 The project includes comprehensive tests covering:
+- **Type inference**: Polymorphism, unification, generalization
+- **Evaluation**: Function application, recursion, conditionals
+- **Error handling**: Type errors, unbound variables, parse errors
 
-### Type System Tests (`TypeTests.fs`)
-- Basic type inference for literals and functions
-- Polymorphic function instantiation
-- Let-polymorphism and generalization
-- Unification algorithm correctness
-- Complex type scenarios and error cases
-
-### Evaluation Tests (`EvalTests.fs`)
-- Literal evaluation and basic operations
-- Function application and closures
-- Recursive function evaluation
-- Higher-order function behavior
-- Error handling and edge cases
-
-### Parser Tests (`ParserTests.fs`)
-- Lexical analysis correctness
-- Syntax parsing for all constructs
-- Operator precedence and associativity
-- Error recovery and reporting
-- Round-trip parse/print testing
-
-## 🎓 Academic Integration
-
-### Course Connection
-This project directly implements concepts from:
-- **Advanced Notes on ML v1.7** by Prof. Alvise Spanò
-- ML type system formal specification
-- Operational semantics rules (E-Lit, E-Var, E-App, etc.)
-- Type inference rules (I-Lit, I-Var, I-App, etc.)
-
-### Research Foundation
-Based on foundational papers:
-- Damas & Milner: "Principal Type-Schemes for Functional Programs"
-- Hindley: "The Principal Type-Scheme of an Object in Combinatory Logic"
-- Milner: "A Theory of Type Polymorphism in Programming"
-
-## 🛠️ Development Workflow
-
-### Building and Running
+Run tests with:
 ```bash
-# Development build
-dotnet build
-
-# Run with verbose output
-dotnet run -- -v examples/recursion.ml
-
-# Type check only
-dotnet run -- -t examples/*.ml
-
-# Start interactive REPL
-dotnet run -- -i
-```
-
-### Testing
-```bash
-# Run all tests
-dotnet test
-
-# Run specific test class
-dotnet test --filter TypeTests
-
-# Verbose test output
 dotnet test --verbosity normal
 ```
 
-### Code Organization
-- **Immutable data structures** throughout
-- **Functional programming style** with minimal side effects
-- **Comprehensive error handling** with custom exceptions
-- **Performance considerations** with tail recursion and optimizations
+## Contributing
 
-## 📖 Usage Examples
+Contributions are welcome! Areas for improvement:
+- Pattern matching on algebraic data types
+- Module system implementation
+- Performance optimizations
+- Extended standard library
 
-### Basic Programming
-```fsharp
-# Simple arithmetic
-TinyML> 2 + 3 * 4;;
-- : int = 14
+## References
 
-# Function definition and application
-TinyML> let square = λx.x * x in square 5;;
-- : int = 25
+- [Types and Programming Languages](https://www.cis.upenn.edu/~bcpierce/tapl/) by Benjamin Pierce
+- [ML for the Working Programmer](https://www.cl.cam.ac.uk/~lp15/MLbook/) by Lawrence Paulson
+- [Advanced Notes on ML v1.7](https://github.com/alvisespano/FunctionalLanguages-UniPD) by Prof. Alvise Spanò
+- [Principal Type-Schemes for Functional Programs](https://web.cs.wpi.edu/~cs4536/c12/milner-damas_principal_types.pdf) by Damas & Milner
 
-# Higher-order functions
-TinyML> let twice = λf.λx.f (f x) in twice (λx.x + 1) 5;;
-- : int = 7
-```
+## License
 
-### Advanced Features
-```fsharp
-# Polymorphic functions
-TinyML> let compose = λf.λg.λx.f (g x);;
-val compose : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-# Recursive algorithms
-TinyML> let rec gcd = λa.λb.if b = 0 then a else gcd b (a % b) in gcd 48 18;;
-- : int = 6
+## Acknowledgments
 
-# Church encodings
-TinyML> let true_c = λx.λy.x in let false_c = λx.λy.y in true_c "yes" "no";;
-- : string = "yes"
-```
+- Prof. Alvise Spanò for the excellent Functional Languages course
+- University of Padova Computer Science Department
+- The ML community for foundational research
 
-## 🎯 Learning Outcomes
+---
 
-Students working with this project will:
-
-1. **Understand Type Systems**: Gain deep insight into how type inference works
-2. **Master Functional Programming**: Learn advanced FP concepts and techniques
-3. **Implement Language Features**: Build complete language constructs from scratch
-4. **Apply Formal Methods**: Connect theory to practical implementation
-5. **Develop System Thinking**: Understand how language components interact
-
-## 🚀 GitHub Repository Setup
-
-### Repository Configuration
-```bash
-# Initialize repository
-git init
-git add .
-git commit -m "Initial commit: Complete TinyML interpreter implementation"
-
-# Add remote and push
-git remote add origin https://github.com/yourusername/TinyML-Interpreter.git
-git branch -M main
-git push -u origin main
-```
-
-### Recommended GitHub Settings
-- **Description**: "Complete ML interpreter with Hindley-Milner type inference (University of Padova Functional Languages course project)"
-- **Topics**: `functional-programming`, `ml`, `type-inference`, `interpreter`, `fsharp`, `computer-science`, `university-project`
-- **License**: MIT License
-- **README**: Automatically detected and displayed
-
-## 📈 Future Enhancements
-
-Potential improvements for advanced students:
-- **Pattern Matching**: Add support for algebraic data types
-- **Module System**: Implement ML-style modules and functors
-- **Garbage Collection**: Add memory management
-- **Optimization**: Implement tail call optimization
-- **LLVM Backend**: Compile to native code
-- **IDE Integration**: Language server protocol support
+**Course**: Functional Languages 2023-2024  
+**Institution**: University of Padova  
+**Instructor**: Prof. Alvise Spanò  
+**Implementation**: F# with Hindley-Milner type system

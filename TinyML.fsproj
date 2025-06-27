@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="src/Ast.fs" />
+    <Compile Include="src/Types.fs" />
+    <Compile Include="src/Environment.fs" />
+    <Compile Include="src/Substitution.fs" />
+    <Compile Include="src/Unification.fs" />
+    <Compile Include="src/Lexer.fs" />
+    <Compile Include="src/Parser.fs" />
+    <Compile Include="src/TypeChecker.fs" />
+    <Compile Include="src/Evaluator.fs" />
+    <Compile Include="src/Main.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- Test project references -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Compile Include="tests/TypeTests.fs" />
+    <Compile Include="tests/EvalTests.fs" />
+    <Compile Include="tests/ParserTests.fs" />
+  </ItemGroup>
+
+</Project>
